@@ -9,6 +9,12 @@ from sklearn.model_selection import train_test_split
 from src.expesion import CustomException
 from src.componets.logger import logging
 
+from src.componets.data_transformation import DataTransformation
+from src.componets.data_transformation import DataTransformationConfig
+
+
+
+
 
 # ==========================================
 # DATA INGESTION CONFIGURATION
@@ -142,10 +148,14 @@ class DataIngestion:
 # ==========================================
 
 if __name__ == "__main__":
+    
 
     obj = DataIngestion()
 
-    train_path, test_path = obj.initiate_data_ingestion()
+    train_data,test_data = obj.initiate_data_ingestion()
 
-    print("\nTrain data path:", train_path)
-    print("Test data path:", test_path)
+    print("\nTrain data path:", train_data)
+    print("Test data path:", test_data)
+
+    data_transformation = DataTransformation()
+    data_transformation.initiate_data_transformation(train_data, test_data)
