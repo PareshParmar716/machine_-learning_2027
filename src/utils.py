@@ -7,6 +7,7 @@ import pandas as pd
 from src.expesion import CustomException
 import pickle
 from sklearn.metrics import  r2_score
+from sklearn.model_selection import  GridSearchCV
 
 
 def save_object(file_path,obj):
@@ -20,12 +21,16 @@ def save_object(file_path,obj):
         raise CustomException(e, sys)
 
 
-def evalute_models(X_train,y_train,X_test,y_test,models):
+def evalute_models(X_train,y_train,X_test,y_test,models,params):
     try:
         report ={}
-        for i in range(len(list(models))):
-            model = list(models.values())[i]
-            model.fit(X_train,y_train) # train the model 
+        for model_name, model in models.items():
+            model_params = params[model_name]
+            gs = GridSearchCV(model,model_params,cv=3)
+            gs.fit(X_train,y_train)
+            model.set_params(**gs.best_params_)
+            model.fit(X_train,y_train)
+            # model.fit(X_train,y_train) # train the model 
 
             y_train_pred = model.predict(X_train)
 
@@ -34,7 +39,7 @@ def evalute_models(X_train,y_train,X_test,y_test,models):
             train_model_score = r2_score(y_train,y_train_pred)
             test_model_score = r2_score(y_test,y_test_pred)
 
-            report[list(models.keys())[i]] = test_model_score
+            report[model_name] = test_model_score
 
         return report    
 
