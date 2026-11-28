@@ -11,6 +11,10 @@ from src.componets.logger import logging
 
 from src.componets.data_transformation import DataTransformation
 from src.componets.data_transformation import DataTransformationConfig
+from src.componets.model_trainer import ModelTrainerConnfig
+from src.componets.model_trainer import ModelTrainer
+from src.utils import save_object
+
 
 
 
@@ -148,7 +152,7 @@ class DataIngestion:
 # ==========================================
 
 if __name__ == "__main__":
-    
+
 
     obj = DataIngestion()
 
@@ -158,4 +162,7 @@ if __name__ == "__main__":
     print("Test data path:", test_data)
 
     data_transformation = DataTransformation()
-    data_transformation.initiate_data_transformation(train_data, test_data)
+    train_array,test_array,_=data_transformation.initiate_data_transformation(train_data, test_data)
+
+    model_trainer = ModelTrainer()
+    print(model_trainer.initiate_model_trainer(train_array,test_array))
